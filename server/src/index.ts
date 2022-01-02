@@ -1,55 +1,49 @@
 import "reflect-metadata";
-import {createConnection} from "typeorm";
-import {User} from "./entity/User";
-
+// import { createConnection } from "typeorm";
 import { ApolloServer } from 'apollo-server-express';
-import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
-import express from 'express';
-import http from 'http';
+import * as express from 'express';
 
-createConnection().then(async connection => {
+import { typeDefs } from "./typeDefs"
+import { resolvers } from "./resolver";
 
-    console.log("Inserting a new user into the database...");
-    const user = new User();
-    user.firstName = "Timber";
-    user.lastName = "Saw";
-    user.age = 25;
-    await connection.manager.save(user);
-    console.log("Saved a new user with id: " + user.id);
-
-    console.log("Loading users from the database...");
-    const users = await connection.manager.find(User);
-    console.log("Loaded users: ", users);
-
-    console.log("Here you can setup and run express/koa/any other framework.");
-
-}).catch(error => console.log(error));
+// import { User } from "./entity/User";
 
 
-async function startApolloServer(typeDefs, resolvers) {
-  // Required logic for integrating with Express
-  const app = express();
-  const httpServer = http.createServer(app);
 
-  // Same ApolloServer initialization as before, plus the drain plugin.
-  const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
-  });
+// createConnection().then(async connection => {
 
-  // More required logic for integrating with Express
-  await server.start();
-  server.applyMiddleware({
-    app,
+//     console.log("Inserting a new user into the database...");
+//     const user = new User();
+//     user.firstName = "Timber";
+//     user.lastName = "Saw";
+//     user.age = 25;
+//     await connection.manager.save(user);
+//     console.log("Saved a new user with id: " + user.id);
 
-    // By default, apollo-server hosts its GraphQL endpoint at the
-    // server root. However, *other* Apollo Server packages host it at
-    // /graphql. Optionally provide this to match apollo-server.
-    path: '/'
-  });
+//     console.log("Loading users from the database...");
+//     const users = await connection.manager.find(User);
+//     console.log("Loaded users: ", users);
 
-  // Modified server startup
-  await new Promise<void>(resolve => httpServer.listen({ port: 4000 }, resolve));
-  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
+//     console.log("Here you can setup and run express/koa/any other framework.");
+
+// }).catch(error => console.log(error));
+
+async function startApolloServer() {
+    // Required logic for integrating with Expres
+    const server = new ApolloServer({
+        typeDefs,
+        resolvers,
+    })
+    const app = express()
+    
+    await server.start();
+    
+    server.applyMiddleware({ app })
+    
+    await new Promise<void>(resolve => app.listen({ port: 4000 }, resolve));
+    
+    console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
 }
+
+startApolloServer();
+
