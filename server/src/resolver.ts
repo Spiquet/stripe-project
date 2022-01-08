@@ -16,6 +16,16 @@ export const resolvers = {
             }).save();
 
             return true;
+        },
+        login: async (_: any, { email, password }: any) => {
+            const user = await User.findOne({ where: { email } });
+            if (!user) {
+                return null;
+            }
+            const valid = await bcrypt.compare(password, user.password)
+            if (!valid) {
+            }
+            return user;
         }
     }
 }
