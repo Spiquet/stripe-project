@@ -5,6 +5,8 @@ import { User } from "./entity/User"
 export const resolvers = {
     Query: {
         me: (_: any, __: any, { req }: any) => {
+            console.log(req.session.userId);
+            
             if (!req.session.userId) {
                 return null
             }
