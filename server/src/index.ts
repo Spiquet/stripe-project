@@ -40,15 +40,12 @@ const startApolloServer = async () => {
         }),
     );
 
-    await server.start();
-
-    // server.applyMiddleware({ app })
-    
+    await server.start();    
 
     server.applyMiddleware({
         app,
         cors: {
-          origin: 'https://studio.apollographql.com',
+          origin: "http://localhost:3000",
           credentials: true,
         },
       });
