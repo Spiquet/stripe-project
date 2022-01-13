@@ -1,8 +1,9 @@
 import React from "react";
 import { Mutation } from "react-apollo";
 import { gql } from "apollo-boost";
-import { RegisterMutationMutation, RegisterMutationMutationVariables } from "../../generated/graphql";
+// import { useNavigate } from "react-router-dom";
 
+import { RegisterMutationMutation, RegisterMutationMutationVariables } from "../../generated/graphql";
 
 
 const registerMutation = gql`
@@ -27,8 +28,10 @@ export class RegisterView extends React.PureComponent {
     render() {
         const { password, email } = this.state
         return (
-            <Mutation<RegisterMutationMutation, RegisterMutationMutationVariables> mutation={registerMutation}>
-                {() => (
+            <Mutation<RegisterMutationMutation, RegisterMutationMutationVariables>
+                mutation={registerMutation}
+            >
+                {mutate => (
 
                     <form style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                         <div>
@@ -49,7 +52,16 @@ export class RegisterView extends React.PureComponent {
                             />
                         </div>
                         <div>
-                            <button onClick={() => console.log("hi")}>Register</button>
+                            <button onClick={ async () => {
+                                // let navigate = useNavigate();
+                                const response = await mutate({
+                                    variables: this.state
+                                });
+                                console.log('response', response);
+                                // navigate("/login", { replace: true });
+
+                            }
+                            }>Register</button>
                         </div>
                     </form>
                 )}
