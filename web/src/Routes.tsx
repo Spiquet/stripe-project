@@ -2,10 +2,9 @@ import * as React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { LoginView } from "./modules/user/loginView";
-import { MeView } from "./modules/user/MeView";
 import { RegisterView } from "./modules/user/registerView";
-
-import SubscribeUser from "./modules/account/SubscribeUser";
+import { Account } from "./modules/account/Account";
+import PaidUsers from "./modules/account/PaidUsers";
 
 
 export class Ways extends React.PureComponent {
@@ -17,9 +16,9 @@ export class Ways extends React.PureComponent {
                     </Route>
                     <Route path="/register" element={<RegisterView />}>
                     </Route>
-                    <Route path="/me" element={<MeView />}>
+                    <Route path="/account" element={<Account />}>
                     </Route>
-                    <Route path="/subscription" element={<SubscribeUser />}>
+                    <Route path="/paid-users" element={<PaidUsers />}>
                     </Route>
                 </Routes>
             </BrowserRouter>
