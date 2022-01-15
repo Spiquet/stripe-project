@@ -5,6 +5,7 @@ import { LoginView } from "./modules/user/loginView";
 import { MeView } from "./modules/user/MeView";
 import { RegisterView } from "./modules/user/registerView";
 
+import SubscribeUser from "./modules/account/SubscribeUser";
 
 
 export class Ways extends React.PureComponent {
@@ -17,6 +18,8 @@ export class Ways extends React.PureComponent {
                     <Route path="/register" element={<RegisterView />}>
                     </Route>
                     <Route path="/me" element={<MeView />}>
+                    </Route>
+                    <Route path="/subscription" element={<SubscribeUser />}>
                     </Route>
                 </Routes>
             </BrowserRouter>
