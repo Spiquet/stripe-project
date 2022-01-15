@@ -1,7 +1,9 @@
 import { gql } from "apollo-boost";
 import React from "react";
 import { Query } from "react-apollo";
+import { Navigate } from "react-router-dom";
 import { MeQuery } from "../../schemaTypes";
+import SubscribeUser from "./SubscribeUser";
 
 
 const meQuery = gql`
@@ -9,11 +11,12 @@ query MeQuery{
 me {
     id
     email
-}
+    type
+    }
 }
 `;
 
-export class MeView extends React.PureComponent {
+export class Account extends React.PureComponent {
     render() {
         return (
             <Query<MeQuery> query={meQuery}>
@@ -27,10 +30,16 @@ export class MeView extends React.PureComponent {
                     }
 
                     if (!data.me) {
-                        return <div>received no user</div>;
+                        return <Navigate to="/login" />;
+
                     }
 
-                    return <div>{data.me.email}</div>;
+                    if (data.me.type === 'free-trial') {
+                        return <SubscribeUser />
+                    }
+
+                    return <Navigate to="/paid-users" / >
+
                 }}
             </Query>
         );

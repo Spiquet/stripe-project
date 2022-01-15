@@ -59,8 +59,9 @@ export const resolvers = {
             });
 
             user.stripeId = customer.id;
-            user.type = "karma"
+            user.type = "paid"
             await user.save();
+            console.log(user);
 
             return user;
 
