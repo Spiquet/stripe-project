@@ -1,7 +1,7 @@
 import { gql } from "apollo-boost";
 import React from "react";
 import { Query } from "react-apollo";
-import { MeQueryQuery } from "../../generated/graphql";
+import { MeQuery } from "../../schemaTypes";
 
 
 const meQuery = gql`
@@ -16,7 +16,7 @@ me {
 export class MeView extends React.PureComponent {
     render() {
         return (
-            <Query<MeQueryQuery> query={meQuery}>
+            <Query<MeQuery> query={meQuery}>
                 {({ data, loading }) => {
                     if (loading) {
                         return null;
