@@ -6,7 +6,7 @@ import { RegisterView } from "./modules/user/registerView";
 import { Account } from "./modules/account/Account";
 import PaidUsers from "./modules/account/PaidUsers";
 import HomePage from "./HomePage";
-import Header from "./shared/Header";
+import { Header } from "./shared/Header";
 
 
 export class Ways extends React.PureComponent {
