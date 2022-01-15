@@ -1,9 +1,10 @@
-import React from "react";
+import * as React from "react";
 import { Mutation } from "react-apollo";
 import { gql } from "apollo-boost";
-// import { useNavigate } from "react-router-dom";
+
 
 import { RegisterMutationMutation, RegisterMutationMutationVariables } from "../../generated/graphql";
+
 
 
 const registerMutation = gql`
@@ -12,7 +13,6 @@ mutation RegisterMutation($email: String!, $password: String!) {
   }
   `;
 export class RegisterView extends React.PureComponent {
-
     state = {
         email: "",
         password: ""
@@ -24,16 +24,16 @@ export class RegisterView extends React.PureComponent {
             [name]: value
         })
     }
-
     render() {
         const { password, email } = this.state
+
         return (
             <Mutation<RegisterMutationMutation, RegisterMutationMutationVariables>
                 mutation={registerMutation}
             >
                 {mutate => (
 
-                    <form style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                         <div>
                             <input
                                 name="email"
@@ -52,18 +52,18 @@ export class RegisterView extends React.PureComponent {
                             />
                         </div>
                         <div>
-                            <button onClick={ async () => {
-                                // let navigate = useNavigate();
-                                const response = await mutate({
-                                    variables: this.state
-                                });
-                                console.log('response', response);
-                                // navigate("/login", { replace: true });
-
-                            }
-                            }>Register</button>
+                            <button
+                                onClick={async () => {
+                                    const response = await mutate({
+                                        variables: this.state
+                                    });
+                                    console.log('response', response);
+                                }}
+                            >
+                                Register
+                            </button>
                         </div>
-                    </form>
+                    </div>
                 )}
             </Mutation>
         );
