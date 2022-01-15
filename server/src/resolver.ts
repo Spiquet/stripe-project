@@ -5,15 +5,13 @@ import { User } from "./entity/User"
 export const resolvers = {
     Query: {
         me: (_: any, __: any, { req }: any) => {
-            console.log(req.session.userId);
-            
             if (!req.session.userId) {
                 return null
             }
-            return User.findOne(req.seesion.userId);
+            return User.findOne(req.session.userId);
         }
     },
-     Mutation: {
+    Mutation: {
         register: async (_: any, { email, password }: any) => {
             const hashedPassword = await bcrypt.hash(password, 10);
             await User.create({
@@ -37,7 +35,7 @@ export const resolvers = {
             // Who why know that the user is who he is ?
             // We store a cookie on him and store the user Id on our server
             req.session.userId = user.id;
-            
+
             return user;
         }
     }
