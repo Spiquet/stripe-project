@@ -1,6 +1,7 @@
 import * as bcrypt from 'bcryptjs'
 
 import { User } from "./entity/User"
+import { stripe} from "./stripe"
 
 export const resolvers = {
     Query: {
@@ -37,6 +38,32 @@ export const resolvers = {
             req.session.userId = user.id;
 
             return user;
+        },
+        createSubscription: async (_: any, {source}: any, {req} : any) => {
+            if (!req.session || !req.session.userId)
+            {
+                throw new Error("not authenticated");
+            }
+
+            const user = await User.findOne(req.session.userId);
+
+            if(!user) {
+                throw new Error();
+            }
+
+            const customer = await stripe.customers.create({
+                email : user.email,
+                source,
+                plan: process.env.PLAN
+
+            });
+
+            user.stripeId = customer.id;
+            user.type = "karma"
+            await user.save();
+
+            return user;
+
         }
     }
 }

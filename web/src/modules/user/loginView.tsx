@@ -1,9 +1,9 @@
 import * as React from "react";
 import { Mutation } from "react-apollo";
 import { gql } from "apollo-boost";
+import { LoginMutation, LoginMutationVariables } from "../../schemaTypes";
 
 
-import { LoginMutationMutation, LoginMutationMutationVariables } from "../../generated/graphql";
 
 
 
@@ -31,7 +31,7 @@ export class LoginView extends React.PureComponent {
         const { password, email } = this.state
 
         return (
-            <Mutation<LoginMutationMutation, LoginMutationMutationVariables>
+            <Mutation<LoginMutation, LoginMutationVariables>
                 mutation={loginMutation}
             >
                 {mutate => (

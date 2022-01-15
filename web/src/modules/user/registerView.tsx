@@ -1,9 +1,7 @@
 import * as React from "react";
 import { Mutation } from "react-apollo";
 import { gql } from "apollo-boost";
-
-
-import { RegisterMutationMutation, RegisterMutationMutationVariables } from "../../generated/graphql";
+import { RegisterMutation, RegisterMutationVariables } from "../../schemaTypes";
 
 
 
@@ -28,7 +26,7 @@ export class RegisterView extends React.PureComponent {
         const { password, email } = this.state
 
         return (
-            <Mutation<RegisterMutationMutation, RegisterMutationMutationVariables>
+            <Mutation<RegisterMutation, RegisterMutationVariables>
                 mutation={registerMutation}
             >
                 {mutate => (
