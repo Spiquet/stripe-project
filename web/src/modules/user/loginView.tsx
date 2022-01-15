@@ -2,6 +2,7 @@ import * as React from "react";
 import { Mutation } from "react-apollo";
 import { gql } from "apollo-boost";
 import { LoginMutation, LoginMutationVariables } from "../../schemaTypes";
+import { meQuery } from "../../graphql/queries/me";
 
 
 
@@ -12,6 +13,7 @@ mutation LoginMutation($email: String!, $password: String!) {
     login(email: $email, password: $password) {
         id
         email
+        type
     }
   }
   `;
@@ -32,9 +34,19 @@ export class LoginView extends React.PureComponent {
 
         return (
             <Mutation<LoginMutation, LoginMutationVariables>
+            update={(cache, { data }) => {
+                if (!data || !data.login) {
+                  return;
+                }
+      
+                cache.writeQuery({
+                  query: meQuery,
+                  data: { me: data.login }
+                });
+              }}
                 mutation={loginMutation}
             >
-                {mutate => (
+                {(mutate, {client}) => (
 
                     <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                         <div>
@@ -57,13 +69,15 @@ export class LoginView extends React.PureComponent {
                         <div>
                             <button
                                 onClick={async () => {
+                                    //optionnal reset cache before user logs
+                                    await client?.resetStore();
                                     const response = await mutate({
                                         variables: this.state
                                     });
                                     console.log('response', response);
                                 }}
                             >
-                                Register
+                                Login
                             </button>
                         </div>
                     </div>
