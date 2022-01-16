@@ -2,18 +2,19 @@ import { gql } from "apollo-boost";
 import React from "react";
 import { Query } from "react-apollo";
 import { Navigate } from "react-router-dom";
+import { userFragment } from "../../graphql/fragments/userFragment";
 import { MeQuery } from "../../schemaTypes";
+import ChangeCreditCard from "./ChangeCreditCard";
 import SubscribeUser from "./SubscribeUser";
 
 
 const meQuery = gql`
 query MeQuery{
 me {
-    id
-    email
-    type
+   ...UserInfo
     }
 }
+${userFragment}
 `;
 
 export class Account extends React.PureComponent {
@@ -38,8 +39,12 @@ export class Account extends React.PureComponent {
                         return <SubscribeUser />
                     }
 
-                    return <Navigate to="/paid-users" / >
-
+                    return (
+                        <div>
+                            <div>Your current last 4 digits: {data.me.ccLast4}</div>
+                            <ChangeCreditCard />
+                        </div>
+                    );
                 }}
             </Query>
         );
