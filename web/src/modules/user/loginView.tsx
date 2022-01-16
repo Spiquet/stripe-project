@@ -3,6 +3,7 @@ import { Mutation } from "react-apollo";
 import { gql } from "apollo-boost";
 import { LoginMutation, LoginMutationVariables } from "../../schemaTypes";
 import { meQuery } from "../../graphql/queries/me";
+import { userFragment } from "../../graphql/fragments/userFragment";
 
 
 
@@ -11,11 +12,10 @@ import { meQuery } from "../../graphql/queries/me";
 const loginMutation = gql`
 mutation LoginMutation($email: String!, $password: String!) {
     login(email: $email, password: $password) {
-        id
-        email
-        type
+       ...UserInfo
     }
   }
+  ${userFragment}
   `;
 export class LoginView extends React.PureComponent {
     state = {
@@ -34,19 +34,19 @@ export class LoginView extends React.PureComponent {
 
         return (
             <Mutation<LoginMutation, LoginMutationVariables>
-            update={(cache, { data }) => {
-                if (!data || !data.login) {
-                  return;
-                }
-      
-                cache.writeQuery({
-                  query: meQuery,
-                  data: { me: data.login }
-                });
-              }}
+                update={(cache, { data }) => {
+                    if (!data || !data.login) {
+                        return;
+                    }
+
+                    cache.writeQuery({
+                        query: meQuery,
+                        data: { me: data.login }
+                    });
+                }}
                 mutation={loginMutation}
             >
-                {(mutate, {client}) => (
+                {(mutate, { client }) => (
 
                     <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                         <div>

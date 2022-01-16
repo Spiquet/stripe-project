@@ -1,7 +1,7 @@
 import * as bcrypt from 'bcryptjs'
 
 import { User } from "./entity/User"
-import { stripe} from "./stripe"
+import { stripe } from "./stripe"
 
 export const resolvers = {
     Query: {
@@ -39,32 +39,50 @@ export const resolvers = {
 
             return user;
         },
-        createSubscription: async (_: any, {source}: any, {req} : any) => {
-            if (!req.session || !req.session.userId)
-            {
+        createSubscription: async (_: any, { source, ccLast4 }: any, { req }: any) => {
+            if (!req.session || !req.session.userId) {
                 throw new Error("not authenticated");
             }
 
             const user = await User.findOne(req.session.userId);
 
-            if(!user) {
+            if (!user) {
                 throw new Error();
             }
 
             const customer = await stripe.customers.create({
-                email : user.email,
+                email: user.email,
                 source,
                 plan: process.env.PLAN
 
             });
 
             user.stripeId = customer.id;
-            user.type = "paid"
+            user.type = "paid";
+            user.ccLast4 = ccLast4;
             await user.save();
             console.log(user);
 
             return user;
 
+        },
+        changeCreditCard: async (_: any, { source, ccLast4 }: any, { req }: any) => {
+            if (!req.session || !req.session.userId) {
+                throw new Error("not authenticated");
+            }
+
+            const user = await User.findOne(req.session.userId);
+
+            if (!user || !user.stripeId || user.type !== "paid") {
+                throw new Error();
+            }
+
+            await stripe.customers.update(user.stripeId, { source });
+
+            user.ccLast4 = ccLast4;
+            await user.save();
+
+            return user;
         }
     }
 }
