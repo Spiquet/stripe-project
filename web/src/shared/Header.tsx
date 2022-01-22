@@ -45,7 +45,7 @@ export class Header extends React.PureComponent {
 
             return (
               <div>
-                <Link to="/account">account</Link>
+                <Link to="/account">Your Account</Link>
               </div>
             );
           }}
