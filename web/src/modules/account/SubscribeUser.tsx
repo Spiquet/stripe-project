@@ -29,6 +29,7 @@ export default class SubscribeUser extends React.Component {
 
                         }}
                         stripeKey={process.env.REACT_APP_STRIPE_PUBLISHABLE!}
+                        amount={1000}
                     />
                 )}
             </Mutation>
