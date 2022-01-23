@@ -27,6 +27,7 @@
       "express": "^4.17.2",
       "express-session": "^1.17.2",
       "graphql": "^16.2.0",
+      "graphql-tools": "^8.2.0",
       "pg": "^8.4.0",
       "reflect-metadata": "^0.1.10",
       "stripe": "^8.197.0",
