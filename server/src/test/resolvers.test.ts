@@ -3,7 +3,6 @@ import { Connection } from "typeorm";
 import { gCall } from "../test.utils/grapqlTestCall";
 import { createTestConn } from "../test.utils/createTestConnection";
 import { User } from "../entity/User";
-import { clear } from "console";
 
 const registerMutation = `
     mutation RegisterMutation($email: String!, $password: String!) {
@@ -63,12 +62,8 @@ describe("resolvers", () => {
     const loginResponse = await gCall(loginMutation, {
       email: testUser.email,
       password: testUser.password
-    })
-
-    console.log(loginResponse);
+    })    
     
-
-
     expect(loginResponse).toMatchObject({
       data: {
         login: {

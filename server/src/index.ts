@@ -18,6 +18,9 @@ const startApolloServer = async () => {
     context: ({ req, res }: any) => ({ req, res })
   });
 
+  await server.start();
+  
+  
   app.use(
     session({
       secret: 'kjfijqsuihjvsigiuqlJVODSQUHFVZ',
@@ -32,7 +35,6 @@ const startApolloServer = async () => {
   );
 
 
-  await server.start();
 
   server.applyMiddleware({
     app,
