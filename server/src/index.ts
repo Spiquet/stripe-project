@@ -7,7 +7,7 @@ import * as express from 'express';
 import * as session from 'express-session';
 
 import { typeDefs } from "./typeDefs"
-import { resolvers } from "./resolver";
+import { resolvers } from "./resolvers";
 
 const startApolloServer = async () => {
   const app = express();
@@ -15,9 +15,12 @@ const startApolloServer = async () => {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
-    context: ({ req }: any) => ({ req })
+    context: ({ req, res }: any) => ({ req, res })
   });
 
+  await server.start();
+  
+  
   app.use(
     session({
       secret: 'kjfijqsuihjvsigiuqlJVODSQUHFVZ',
@@ -32,7 +35,6 @@ const startApolloServer = async () => {
   );
 
 
-  await server.start();
 
   server.applyMiddleware({
     app,

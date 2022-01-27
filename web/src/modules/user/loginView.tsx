@@ -4,6 +4,7 @@ import { gql } from "apollo-boost";
 import { LoginMutation, LoginMutationVariables } from "../../schemaTypes";
 import { meQuery } from "../../graphql/queries/me";
 import { userFragment } from "../../graphql/fragments/userFragment";
+import { Form } from "./Form";
 
 
 
@@ -17,21 +18,9 @@ mutation LoginMutation($email: String!, $password: String!) {
   }
   ${userFragment}
   `;
-export class LoginView extends React.PureComponent {
-    state = {
-        email: "",
-        password: ""
-    };
 
-    handleChange = (e: any) => {
-        const { name, value } = e.target;
-        this.setState({
-            [name]: value
-        })
-    }
+export class LoginView extends React.PureComponent<{}>{
     render() {
-        const { password, email } = this.state
-
         return (
             <Mutation<LoginMutation, LoginMutationVariables>
                 update={(cache, { data }) => {
@@ -47,43 +36,20 @@ export class LoginView extends React.PureComponent {
                 mutation={loginMutation}
             >
                 {(mutate, { client }) => (
-
-                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                        <div>
-                            <input
-                                name="email"
-                                placeholder="email"
-                                value={email}
-                                onChange={this.handleChange}
-                            />
-                        </div>
-                        <div>
-                            <input
-                                type="password"
-                                name="password"
-                                placeholder="paswword"
-                                value={password}
-                                onChange={this.handleChange}
-                            />
-                        </div>
-                        <div>
-                            <button
-                                onClick={async () => {
-                                    //optionnal reset cache before user logs
-                                    await client?.resetStore();
-                                    const response = await mutate({
-                                        variables: this.state
-                                    });
-                                    console.log('response', response);
-                                }}
-                            >
-                                Login
-                            </button>
-                        </div>
-                    </div>
+                    <Form
+                        buttonText="Login"
+                        onSubmit={async data => {
+                            // optional reset cache
+                            await client?.resetStore();
+                            const response = await mutate({
+                                variables: data
+                            });
+                            console.log(response);
+                            // this.props.history.push("/account");
+                        }}
+                    />
                 )}
             </Mutation>
         );
     }
-
 }

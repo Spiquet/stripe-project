@@ -1,14 +1,15 @@
-import * as bcrypt from 'bcryptjs'
+import * as bcrypt from "bcryptjs";
 
-import { User } from "./entity/User"
-import { stripe } from "./stripe"
+import { User } from "./entity/User";
+import { stripe } from "./stripe";
 
 export const resolvers = {
     Query: {
         me: (_: any, __: any, { req }: any) => {
             if (!req.session.userId) {
-                return null
+                return null;
             }
+
             return User.findOne(req.session.userId);
         }
     },
@@ -28,13 +29,11 @@ export const resolvers = {
                 return null;
             }
 
-            const valid = await bcrypt.compare(password, user.password)
+            const valid = await bcrypt.compare(password, user.password);
             if (!valid) {
                 return null;
             }
 
-            // Who why know that the user is who he is ?
-            // We store a cookie on him and store the user Id on our server
             req.session.userId = user.id;
 
             return user;
@@ -50,21 +49,36 @@ export const resolvers = {
                 throw new Error();
             }
 
-            const customer = await stripe.customers.create({
-                email: user.email,
-                source,
-                plan: process.env.PLAN
+            let stripeId = user.stripeId;
 
-            });
+            if (!stripeId) {
+                const customer = await stripe.customers.create({
+                    email: user.email,
+                    source,
+                    plan: process.env.PLAN
+                });
+                stripeId = customer.id;
+            } else {
+                // update customer
+                await stripe.customers.update(stripeId, {
+                    source
+                });
+                await stripe.subscriptions.create({
+                    customer: stripeId,
+                    items: [
+                        {
+                            plan: process.env.PLAN!
+                        }
+                    ]
+                });
+            }
 
-            user.stripeId = customer.id;
+            user.stripeId = stripeId;
             user.type = "paid";
             user.ccLast4 = ccLast4;
             await user.save();
-            console.log(user);
 
             return user;
-
         },
         changeCreditCard: async (_: any, { source, ccLast4 }: any, { req }: any) => {
             if (!req.session || !req.session.userId) {
@@ -83,6 +97,33 @@ export const resolvers = {
             await user.save();
 
             return user;
+        },
+        cancelSubscription: async (_: any, __: any, { req }: any) => {
+            if (!req.session || !req.session.userId) {
+                throw new Error("not authenticated");
+            }
+
+            const user = await User.findOne(req.session.userId);
+
+            if (!user || !user.stripeId || user.type !== "paid") {
+                throw new Error();
+            }
+
+            const stripeCustomer = await stripe.customers.retrieve(user.stripeId);
+
+            const [subscription] = stripeCustomer.subscriptions.data;
+
+            await stripe.subscriptions.del(subscription.id);
+
+            await stripe.customers.deleteSource(
+                user.stripeId,
+                stripeCustomer.default_source as string
+            );
+
+            user.type = "free-trial";
+            await user.save();
+
+            return user;
         }
     }
-}
+};

@@ -6,14 +6,29 @@ import { ApolloProvider } from 'react-apollo';
 
 import reportWebVitals from './reportWebVitals';
 import { Ways } from './Routes';
+import { createGlobalStyle } from 'styled-components';
 
 const client = new ApolloClient({
   uri: 'http://localhost:4000/graphql',
   credentials: "include",
 });
 
+const GlobalStyle = createGlobalStyle`
+  body {
+    background-color: rgb(255, 254, 252);
+  }
+  *:focus {
+    outline: 0;
+  }
+  a {
+    color: #0d0d0d;
+    text-decoration: none;
+  }
+`;
+
 ReactDOM.render(
   <ApolloProvider client={client}>
+    <GlobalStyle />
     <React.StrictMode>
       <Ways />
     </React.StrictMode>
