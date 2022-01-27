@@ -9,3 +9,5 @@ jobs:
       - run: node --version     
 
       - run: yarn install
+
+      - run: yarn test 
