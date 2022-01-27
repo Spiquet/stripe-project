@@ -5,14 +5,12 @@ jobs:
     docker:
       - image: cimg/node:17.4.0
     
-    working_directory: ~/repo
+    working_directory: ~/server
     
     steps:
       - checkout
       - run: node --version     
 
       - run: yarn install
-
-      - run: cd server 
 
       - run: yarn test 
