@@ -16,8 +16,6 @@ jobs:
     docker:
       - image: cimg/node:17.4.0
       
-    working_directory: server
-
     steps:
       - checkout
       - run: cd server && yarn test 
