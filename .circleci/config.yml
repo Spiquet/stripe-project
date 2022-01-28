@@ -11,14 +11,14 @@ jobs:
       - checkout
       - run: node --version     
 
-  test:
+  test-server:
     docker:
       - image: cimg/node:17.4.0
       
     steps:
       - checkout
       - run: cd server && yarn install 
-      - run: yarn test
+      - run: ce server && yarn test
 
 # Orchestrate our job run sequence
 workflows:
