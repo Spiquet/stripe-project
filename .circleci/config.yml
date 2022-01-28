@@ -10,7 +10,6 @@ jobs:
     steps:
       - checkout
       - run: node --version     
-      - run: yarn install
 
   test:
     docker:
@@ -18,6 +17,7 @@ jobs:
       
     steps:
       - checkout
+      - run: yarn install
       - run: cd server && yarn test 
 
 # Orchestrate our job run sequence
