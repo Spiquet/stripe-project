@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - checkout
-      - run: yarn test 
+      - run: cd server && yarn test 
 
 # Orchestrate our job run sequence
 workflows:
