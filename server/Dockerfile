@@ -22,7 +22,7 @@ RUN npm install --production
 
 COPY --from=builder /usr/src/app/dist ./dist
 
-COPY  ormconfig.json .
+COPY ormconfig.docker.json ./ormconfig.json
 
 COPY .env .
  
