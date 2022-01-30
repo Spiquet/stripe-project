@@ -1,6 +1,6 @@
 import { createConnection } from "typeorm";
 
-export const createTestConn = async (drop: boolean = false) =>
+export const createTestConn = async () =>
   createConnection({
     type: "postgres",
     host: "localhost",
@@ -8,8 +8,8 @@ export const createTestConn = async (drop: boolean = false) =>
     username: "",
     password: "",
     database: "stripe-project-test",
-    synchronize: drop,
-    dropSchema: drop,
+    synchronize: true,
+    dropSchema: true,
     logging: false,
     entities: ["src/entity/**/*"]
   });

@@ -1,5 +1,7 @@
 version: "3.7"
 services:
+  redis:
+    image: redis
   postgres:
     image: postgres
     restart: always
@@ -12,5 +14,6 @@ services:
     image: stripe-project-multi-stage
     depends_on:
       - postgres
+      - redis
     ports:
       - "4000:4000"
