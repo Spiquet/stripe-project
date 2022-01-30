@@ -1,12 +1,3 @@
-docker run -p 5432:5432 -d \
-    -e POSTGRES_PASSWORD=postgres \
-    -e POSTGRES_USER=postgres \
-    -e POSTGRES_DB=stripe-example \
-    -v pgdata:/var/lib/postgresql/data \
-    postgres
-
- psql stripe-project -h localhost -U postgres
-
  docker exec -it bdca2b8c09b7 psql -U postgres stripe-project
 
 1. docker-compose.yml

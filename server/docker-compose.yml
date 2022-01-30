@@ -1,18 +1,16 @@
 version: "3.7"
 services:
-  db:
+  postgres:
     image: postgres
-    environment:
-      POSTGRES_PASSWORD: "postgres"
-      POSTGRES_USER: "postgres"
-      POSTGRES_DB: stripe-db-docker
+    restart: always
+    env_file: .env
     volumes:
       - ./pgdata:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5431:5432"
   web:
     image: stripe-project-multi-stage
     depends_on:
-      - db
+      - postgres
     ports:
       - "4000:4000"

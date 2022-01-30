@@ -31,6 +31,7 @@ const startApolloServer = async () => {
       // wait 5 seconds
       await new Promise(res => setTimeout(res, 5000));
     }
+  }
 
     await server.start();
 
@@ -53,7 +54,8 @@ const startApolloServer = async () => {
     server.applyMiddleware({
       app,
       cors: {
-        origin: 'http://localhost:3000',
+        //origin: 'http://localhost:3000',
+        origin: 'https://studio.apollographql.com',
         credentials: true,
       },
     });
@@ -61,7 +63,7 @@ const startApolloServer = async () => {
     await new Promise<void>(resolve => app.listen({ port: 4000 }, resolve));
     console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
   }
-}
+
 
 startApolloServer();
 

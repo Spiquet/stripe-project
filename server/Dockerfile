@@ -1,5 +1,5 @@
 # stage 1 building the code
-FROM node as builder
+FROM node:alpine as builder
 
 WORKDIR /usr/src/app
 
@@ -12,7 +12,7 @@ COPY . .
 RUN yarn build
 
 # stage 2
-FROM node
+FROM node:alpine
 
 WORKDIR /usr/src/app
 

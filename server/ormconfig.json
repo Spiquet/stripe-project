@@ -2,9 +2,9 @@
    "type": "postgres",
    "host": "localhost",
    "port": 5432,
-   "username": "postgres",
-   "password": "postgres",
-   "database": "stripe-db-docker",
+   "username": "",
+   "password": "",
+   "database": "stripe-db",
    "synchronize": true,
    "logging": false,
    "entities": [
