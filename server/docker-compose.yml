@@ -1,0 +1,16 @@
+version: "3.7"
+services:
+  postgres:
+    image: postgres
+    restart: always
+    env_file: .env
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - "5431:5432"
+  web:
+    image: stripe-project-multi-stage
+    depends_on:
+      - postgres
+    ports:
+      - "4000:4000"
