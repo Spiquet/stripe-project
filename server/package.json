@@ -41,7 +41,7 @@
       "ci:test": "cross-env NODE_ENV=test jest --ci --runInBand --detectOpenHandles --forceExit",
       "docker:build": "docker build -t spiquet/stripe-project-multi-stage:latest .",
       "docker:login": "docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD",
-      "docker:push": "docker push spiquet/stripe-project-multi-stage:latest",
+      "docker:push": "docker push $DOCKERHUB_USERNAME/stripe-project-multi-stage:latest",
       "ci:docker": "npm run docker:build && npm run docker:login && npm run docker:push"
    }
 }
