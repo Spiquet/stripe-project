@@ -15,6 +15,8 @@ jobs:
     steps:
       - checkout
 
+      - run: cd server
+
       # Download and cache dependencies
       - restore_cache:
           keys:
@@ -22,7 +24,7 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      - run: cd server && yarn install
+      - run: yarn install
 
       - save_cache:
           paths:
@@ -30,7 +32,7 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       # run tests!
-      - run: cd server && yarn ci:test
+      - run: yarn ci:test
 
       - setup_remote_docker:
           docker_layer_caching: true
@@ -44,7 +46,7 @@ jobs:
             tar -xz -C /tmp -f /tmp/docker-$VER.tgz
             mv /tmp/docker/* /usr/bin
       # - run: yarn ci:docker
-      - run: cd server && yarn ci:docker
+      - run: yarn ci:docker
 # version: 2.1
 
 # jobs:
