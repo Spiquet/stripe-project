@@ -1,21 +1,69 @@
 import "reflect-metadata";
-import {createConnection} from "typeorm";
-import {User} from "./entity/User";
+import "dotenv/config"
+import { createConnection } from "typeorm";
+import { ApolloServer } from 'apollo-server-express';
 
-createConnection().then(async connection => {
+import * as express from 'express';
+import * as session from 'express-session';
 
-    console.log("Inserting a new user into the database...");
-    const user = new User();
-    user.firstName = "Timber";
-    user.lastName = "Saw";
-    user.age = 25;
-    await connection.manager.save(user);
-    console.log("Saved a new user with id: " + user.id);
+import { typeDefs } from "./typeDefs"
+import { resolvers } from "./resolvers";
 
-    console.log("Loading users from the database...");
-    const users = await connection.manager.find(User);
-    console.log("Loaded users: ", users);
+const startApolloServer = async () => {
+  const app = express();
 
-    console.log("Here you can setup and run express/koa/any other framework.");
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    context: ({ req, res }: any) => ({ req, res })
+  });
 
-}).catch(error => console.log(error));
+
+  let retries = 5;
+  while (retries) {
+    try {
+      await createConnection();
+      break;
+    } catch (err) {
+      console.log(err);
+      retries -= 1;
+      console.log(`retries left: ${retries}`);
+      // wait 5 seconds
+      await new Promise(res => setTimeout(res, 5000));
+    }
+  }
+
+    await server.start();
+
+
+    app.use(
+      session({
+        secret: 'kjfijqsuihjvsigiuqlJVODSQUHFVZ',
+        name: 'server',
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+          maxAge: 1000 * 60 * 60 * 24 * 365 * 7, // 7 days
+          secure: false
+        }
+      }),
+    );
+
+
+
+    server.applyMiddleware({
+      app,
+      cors: {
+        //origin: 'http://localhost:3000',
+        origin: 'https://studio.apollographql.com',
+        credentials: true,
+      },
+    });
+
+    await new Promise<void>(resolve => app.listen({ port: 4000 }, resolve));
+    console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
+  }
+
+
+startApolloServer();
+
